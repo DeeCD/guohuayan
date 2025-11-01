@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>送给郭华妍的礼物</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: url('1.png') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 初始弹窗样式 */
+        .initial-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            z-index: 10000;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .initial-modal h2 {
+            color: #e91e63;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        .initial-modal p {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .btn-confirm {
+            background: linear-gradient(135deg, #ff6b9d 0%, #e91e63 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(233, 30, 99, 0.4);
+        }
+
+        .btn-confirm:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(233, 30, 99, 0.6);
+        }
+
+        .btn-confirm:active {
+            transform: scale(0.98);
+        }
+
+        /* 祝福语弹窗样式 */
+        .blessing-modal {
+            position: fixed;
+            background: #ffb6c1;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            width: 280px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .blessing-modal.show {
+            opacity: 1;
+        }
+
+        .blessing-modal h3 {
+            color: #e91e63;
+            margin-bottom: 15px;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        .blessing-modal p {
+            color: #8b008b;
+            font-size: 16px;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .heart {
+            font-size: 24px;
+            color: #e91e63;
+            display: inline-block;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 初始弹窗 -->
+    <div id="initialModal" class="initial-modal">
+        <h2>送给郭华妍的礼物</h2>
+        <p>您有一份神秘礼物<span class="heart">❤️</span><br>请问是否要打开？</p>
+        <button class="btn-confirm" onclick="startBlessing()">确定</button>
+    </div>
+
+    <script>
+        // 祝福语数组
+        const blessings = [
+            "愿你的每一天都充满阳光和笑容！",
+            "愿幸福永远陪伴在你的身边！",
+            "愿所有的美好都如期而至！",
+            "愿你的梦想都能实现！",
+            "愿你永远年轻漂亮，青春永驻！",
+            "愿你健康快乐，平安喜乐！",
+            "愿你工作顺利，前程似锦！",
+            "愿你被温柔以待，被世界深深爱着！",
+            "愿你拥有一颗纯净的心，感受生活的美好！",
+            "愿你的人生如诗如画，充满精彩！",
+            "愿你的未来充满无限可能！",
+            "愿你每天都有好心情，开心快乐！",
+            "愿你身边永远有爱你的人！",
+            "愿你的每一个愿望都能成真！",
+            "愿你永远保持那份纯真和美好！",
+            "愿你的生活充满惊喜和感动！",
+            "愿你的笑容如花般绽放！",
+            "愿你拥有美好的爱情和友情！",
+            "愿你的每一天都是新的开始！",
+            "愿你成为最美好的自己！",
+            "愿你的人生路上永远有阳光！",
+            "愿你拥有无尽的快乐和幸福！",
+            "愿你的心中永远有温暖和希望！",
+            "愿你永远保持那份独特的魅力！",
+            "愿你的未来比现在更加精彩！",
+            "愿你拥有最美好的回忆！",
+            "愿你的生活充满爱与温暖！",
+            "愿你永远相信美好的事情即将发生！",
+            "愿你的每一天都值得珍惜！",
+            "愿你拥有世界上最美好的祝福！",
+            "愿你每一天都充满希望和力量！",
+            "愿你的笑容感染身边的每一个人！",
+            "愿你的心灵永远纯净如初！",
+            "愿你的生活充满诗意和远方！",
+            "愿你勇敢追逐心中的梦想！",
+            "愿你的每一天都比昨天更美好！",
+            "愿你拥有真挚的友谊和温暖的陪伴！",
+            "愿你的眼中永远有星辰大海！",
+            "愿你成为自己想要成为的那个人！",
+            "愿你的脚步坚定，未来可期！",
+            "愿你的人生充满色彩和活力！",
+            "愿你的每一天都值得被记录！",
+            "愿你的心中永远有爱和善良！",
+            "愿你的未来充满惊喜和奇迹！"
+        ];
+
+        // 爱心轨迹参数方程
+        function getHeartPosition(t, index, total) {
+            // 爱心参数方程
+            const scale = 25; // 缩放因子（进一步减小爱心尺寸）
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            
+            // 使用参数方程生成爱心形状
+            const x = scale * 16 * Math.pow(Math.sin(t), 3);
+            const y = -scale * (13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+            
+            return {
+                x: centerX + x,
+                y: centerY + y
+            };
+        }
+
+        let modalIndex = 0;
+
+        function startBlessing() {
+            // 隐藏初始弹窗
+            const initialModal = document.getElementById('initialModal');
+            initialModal.style.opacity = '0';
+            initialModal.style.transition = 'opacity 0.5s';
+            
+            setTimeout(() => {
+                initialModal.style.display = 'none';
+            }, 500);
+
+            // 创建祝福语弹窗（扩展到60个）
+            const extendedBlessings = [];
+            // 复制祝福语数组以扩展到60个
+            while (extendedBlessings.length < 60) {
+                extendedBlessings.push(...blessings);
+            }
+            // 只取前60个
+            extendedBlessings.splice(60);
+            const totalModals = extendedBlessings.length;
+            const duration = 7000; // 每个弹窗运动时间（毫秒）- 减慢速度
+            const staggerDelay = 1000; // 每个弹窗延迟时间（间隔1秒）
+
+            extendedBlessings.forEach((blessing, index) => {
+                setTimeout(() => {
+                    createBlessingModal(blessing, index, totalModals, duration);
+                }, index * staggerDelay);
+            });
+        }
+
+        function createBlessingModal(blessing, index, total, duration) {
+            // 创建弹窗元素
+            const modal = document.createElement('div');
+            modal.className = 'blessing-modal';
+            modal.innerHTML = `
+                <h3>❤️ 提示</h3>
+                <p>${blessing}</p>
+            `;
+            document.body.appendChild(modal);
+
+            // 初始位置（从屏幕正中央开始）
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            modal.style.left = centerX + 'px';
+            modal.style.top = centerY + 'px';
+            modal.style.transform = 'translate(-50%, -50%) scale(0)';
+
+            // 显示弹窗
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 50);
+
+            // 计算目标位置（爱心轨迹上的点）
+            const t = (index / total) * 2 * Math.PI;
+            const targetPos = getHeartPosition(t, index, total);
+
+            // 动画到目标位置
+            setTimeout(() => {
+                modal.style.transition = `all ${duration}ms cubic-bezier(0.4, 0, 0.2, 1)`;
+                modal.style.left = targetPos.x + 'px';
+                modal.style.top = targetPos.y + 'px';
+                modal.style.transform = 'translate(-50%, -50%) scale(1)';
+            }, 100);
+
+            // 添加鼠标悬停效果
+            modal.addEventListener('mouseenter', () => {
+                modal.style.transform = 'translate(-50%, -50%) scale(1.1)';
+                modal.style.zIndex = '2000';
+            });
+
+            modal.addEventListener('mouseleave', () => {
+                modal.style.transform = 'translate(-50%, -50%) scale(1)';
+                modal.style.zIndex = '1000';
+            });
+        }
+
+        // 窗口大小改变时重新计算位置
+        window.addEventListener('resize', () => {
+            const modals = document.querySelectorAll('.blessing-modal');
+            modals.forEach((modal, index) => {
+                const total = modals.length;
+                const t = (index / total) * 2 * Math.PI;
+                const targetPos = getHeartPosition(t, index, total);
+                modal.style.left = targetPos.x + 'px';
+                modal.style.top = targetPos.y + 'px';
+            });
+        });
+    </script>
+</body>
+</html>
