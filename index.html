@@ -1,39 +1,39 @@
-<!DOCTYPE html>   <！DOCTYPE   ！文档类型 html   超文本标记语言 >
-<html   超文本标记语言 lang="zh-CN">
-<head   头>
-    <meta   元 charset="UTF-8">
-    <meta   元 name   名字="viewport"   “视口” content   内容="width=device-width, initial-scale=1.0">
-    <title   标题>送给郭华妍的礼物</title   标题>
-       < >风格<style   风格>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>送给郭华妍的礼物</title>
+    <style>
         * {
             margin: 0;
-            padding   填充: 0;
+            padding: 0;
             box-sizing: border-box;
         }
 
-        body   身体 {
+        body {
             font-family: 'Microsoft YaHei', Arial, sans-serif;
-            background   背景: url('1.png') no-repeat center   中心 center   中心 fixed;
+            background: url('1.png') no-repeat center center fixed;
             background-size: cover;
             min-height: 100vh;
-            overflow   溢出: hidden   隐藏的;
+            overflow: hidden;
         }
 
         /* 初始弹窗样式 */
         .initial-modal {
-            position   位置: fixed;
+            position: fixed;
             top: 50%;
-            left   左: 50%;
-            transform   变换: translate   翻译(-50%, -50%);
-            background   背景: white   白色;
-            padding   填充: 40px;
-            border-radius   这个特性: 20px;
-            box-shadow   不必: 0 20px 60px rgba(0, 0, 0, 0.3);
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             z-index: 10000;
-            text-align: center   中心;
-            animation   动画: fadeIn 0.5s ease;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
             max-width: 400px;
-            width   宽度: 90%;
+            width: 90%;
         }
 
         .initial-modal h2 {
@@ -264,8 +264,8 @@
             setTimeout(() => {
                 modal.style.transition = `all ${duration}ms cubic-bezier(0.4, 0, 0.2, 1)`;
                 modal.style.left = targetPos.x + 'px';
-                modal.style.top = targetPos.y + 'px';
-                modal.style.transform = 'translate(-50%, -50%) scale(1)';
+                modal.style   风格.top   前 = targetPos.y + 'px';
+                modal.style   风格.transform   变换 = 'translate(-50%, -50%) scale(1)';
             }, 100);
 
             // 添加鼠标悬停效果
@@ -276,7 +276,7 @@
 
             modal.addEventListener('mouseleave', () => {
                 modal.style.transform = 'translate(-50%, -50%) scale(1)';
-                modal.style.zIndex = '1000';
+                modal.style   风格.zIndex = '1000';
             });
         }
 
@@ -294,4 +294,3 @@
     </script>
 </body>
 </html>
-
