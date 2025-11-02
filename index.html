@@ -134,7 +134,7 @@
     <div id="initialModal" class="initial-modal">
         <h2>送给郭华妍的礼物</h2>
         <p>您有一份神秘礼物<span class="heart">❤️</span><br>请问是否要打开？</p>
-        <button class="btn-confirm" onclick="startBlessing()">确定</button>
+        <button class="btn-confirm" id="confirmBtn">确定</button>
     </div>
 
     <script>
@@ -264,8 +264,8 @@
             setTimeout(() => {
                 modal.style.transition = `all ${duration}ms cubic-bezier(0.4, 0, 0.2, 1)`;
                 modal.style.left = targetPos.x + 'px';
-                modal.style   风格.top   前 = targetPos.y + 'px';
-                modal.style   风格.transform   变换 = 'translate(-50%, -50%) scale(1)';
+                modal.style.top = targetPos.y + 'px';
+                modal.style.transform = 'translate(-50%, -50%) scale(1)';
             }, 100);
 
             // 添加鼠标悬停效果
@@ -274,23 +274,50 @@
                 modal.style.zIndex = '2000';
             });
 
-            modal.addEventListener('mouseleave', () => {
+            modal.addEventListener('mouseleave'   “mouseleave”, () => {
                 modal.style.transform = 'translate(-50%, -50%) scale(1)';
-                modal.style   风格.zIndex = '1000';
+                modal.style.zIndex = '1000';
             });
         }
 
         // 窗口大小改变时重新计算位置
         window.addEventListener('resize', () => {
             const modals = document.querySelectorAll('.blessing-modal');
-            modals.forEach((modal, index) => {
+            modals.forEach((modal   模态, index) => {
                 const total = modals.length;
                 const t = (index / total) * 2 * Math.PI;
                 const targetPos = getHeartPosition(t, index, total);
                 modal.style.left = targetPos.x + 'px';
-                modal.style.top = targetPos.y + 'px';
+                modal.style.top = targetPos.y + 'px'   “像素”;
             });
         });
-    </script>
-</body>
+
+        // 绑定按钮点击事件
+        function bindButtonEvent() {
+            const confirmBtn = document.getElementById('confirmBtn');
+            if (confirmBtn) {
+                confirmBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    try {
+                        startBlessing();
+                    } catch (error) {
+                        console.error('启动祝福动画时出错:', error);
+                        alert('出现错误，请刷新页面重试');
+                    }
+                });
+            } else {
+                console.error('找不到确认按钮元素');
+            }
+        }
+
+        // 页面加载完成后绑定按钮事件
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', bindButtonEvent);
+        } else {
+            // DOM已经加载完成，立即绑定
+            bindButtonEvent();
+        }
+    </script>   > < /脚本
+</body>   身体< / >
 </html>
