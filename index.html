@@ -112,45 +112,68 @@
     <div id="initialModal" class="initial-modal">
         <h2>送给郭华妍的礼物</h2>
         <p>您有一份神秘礼物<span class="heart">❤️</span><br>请问是否要打开？</p>
-        <button class="btn-confirm" id="confirmBtn">确定</button>
+        <button class="btn-confirm" id="confirmBtn" onclick="goToGift(); return false;">确定</button>
+        <a href="guohuayan-gift.html" id="confirmLink" style="display:none;">确定</a>
     </div>
 
-    <script>   < >脚本
-        // 绑定按钮点击事件 - 跳转到第二个页面
-        function bindButtonEvent() {function   函数 绑定按钮事件() {
-            const confirmBtn = document.getElementById('confirmBtn');
-            if (confirmBtn) {   如果（confirmBtn） {
-                // 方法1: 使用onclick属性
-                confirmBtn.onclick = function(e) {确认按钮的点击事件函数如下：
-                    e = e || window.event;   E = E || window   窗口.event；
-                    if (e) {   If (e) {
-                        e.preventDefault();
-                        e.stopPropagation();
+    <script>
+        // 跳转到祝福页面
+        function goToGift() {
+            console.log('goToGift函数被调用');
+            try {
+                window.location.href = 'guohuayan-gift.html';
+            } catch(e) {
+                console.error('跳转失败:', e);
+                // 备用方式
+                try {
+                    window.location = 'guohuayan-gift.html';
+                } catch(e2) {
+                    // 最后使用链接点击
+                    const link = document.getElementById('confirmLink');
+                    if (link) {
+                        link.click();
                     }
-                    // 跳转到第二个页面
-                    window.location.href = 'guohuayan-gift.html';
-                    return false;   返回错误;
-                };
+                }
+            }
+            return false;
+        }
+        
+        // 确保函数在全局作用域可用
+        window.goToGift = goToGift;
+
+        // 绑定按钮点击事件 - 使用多种方式确保能工作
+        function bindButtonEvent() {
+            const confirmBtn = document.getElementById('confirmBtn'   ’confirmBtn’);
+            if (confirmBtn) {
+                // 确保onclick存在
+                if (!confirmBtn.onclick) {
+                    confirmBtn.onclick = goToGift;
+                }
                 
-                // 方法2: 添加click事件监听器
-                confirmBtn.addEventListener('click', function(e) {确认按钮添加事件监听器，监听点击事件，当点击时执行函数。
+                // 添加事件监听器作为备用
+                confirmBtn.addEventListener('click'   “点击”, function(e) {
                     e.preventDefault();
-                    e.stopPropagation();
-                    window.location.href = 'guohuayan-gift.html';
-                    return false;   返回错误;
-                });
+                    goToGift();
+                    return false;
+                }, true);
                 
-                // 方法3: 添加mousedown事件作为备用
-                confirmBtn.addEventListener('mousedown', function(e) {确认按钮添加事件监听器，监听鼠标按下事件，当事件发生时执行函数 e {
-                    e.preventDefault();
-                    window.location.href = 'guohuayan-gift.html';
-                });
+                // 添加mousedown事件作为备用
+                confirmBtn.addEventListener('mousedown'   “mousedown”, function   函数(e) {
+                    goToGift();
+                }, true);
+                
+                console.log('按钮事件已绑定');
+            } else {
+                console.error('找不到按钮元素');
             }
         }
 
+        // 立即执行
+        bindButtonEvent();
+
         // 页面加载完成后绑定按钮事件
-        if (document.readyState === 'loading') {如果（文档就绪状态等于“加载中”）{
-            document.addEventListener('DOMContentLoaded', bindButtonEvent);文档加载完成后添加事件监听器，用于绑定按钮事件。
+        if (document   文档.readyState === 'loading'   “加载”) {
+            document.addEventListener('DOMContentLoaded'   “DOMContentLoaded”内, bindButtonEvent);
         } else {
             bindButtonEvent();
         }
@@ -162,5 +185,5 @@
         // 页面完全加载后再次绑定
         window.addEventListener('load', bindButtonEvent);
     </script>  
-</body>   
+</body>  
 </html>
