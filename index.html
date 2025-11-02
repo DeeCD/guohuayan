@@ -47,6 +47,49 @@
             display: none !important;
         }
 
+        /* 强制隐藏任何包含HTML标签的文本 */
+        html::before,
+        html::after,
+        body::before,
+        body::after {
+            display: none !important;
+            content: none !important;
+            visibility: hidden !important;
+        }
+
+        /* 隐藏所有直接文本节点 */
+        html > text,
+        body > text {
+            display: none !important;
+            visibility: hidden !important;
+        }
+
+        /* 绝对定位隐藏左上角的任何文本 */
+        html {
+            position: relative;
+        }
+        
+        html::before {
+            content: '' !important;
+            display: none !important;
+        }
+        
+        /* 强制隐藏页面左上角区域可能出现的文本 */
+        @supports (position: absolute) {
+            html::before {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 200px;
+                height: 50px;
+                background: transparent;
+                z-index: 999999;
+                pointer-events: none;
+                content: '';
+                display: block;
+            }
+        }
+
         /* 初始弹窗样式 */
         .initial-modal {
             position: fixed;
@@ -166,6 +209,71 @@
     </div>
 
     <script>
+        // 立即隐藏任何可能显示的标签文本
+        (function() {
+            // 立即执行，不等待DOM加载
+            function cleanText() {
+                // 清理html根元素的文本节点
+                if (document.documentElement) {
+                    const htmlChildren = Array.from(document.documentElement.childNodes);
+                    htmlChildren.forEach(function(child) {
+                        if (child.nodeType === 3) { // TEXT_NODE
+                            const text = child.textContent;
+                            if (text && (text.trim().match(/^[<>\/]+/) || text.includes('</') || 
+                                text.includes('脚本') || text.includes('身体'))) {
+                                try {
+                                    document.documentElement.removeChild(child);
+                                } catch(e) {}
+                            }
+                        }
+                    });
+                }
+                
+                // 清理body直接子文本节点
+                if (document.body) {
+                    const bodyChildren = Array.from(document.body.childNodes);
+                    bodyChildren.forEach(function(child) {
+                        if (child.nodeType === 3) { // TEXT_NODE
+                            const text = child.textContent;
+                            if (text && (text.trim().match(/^[<>\/]+/) || text.includes('</') ||
+                                text.includes('脚本') || text.includes('身体'))) {
+                                try {
+                                    document.body.removeChild(child);
+                                } catch(e) {}
+                            }
+                        }
+                    });
+                }
+                
+                // 创建遮罩层隐藏左上角
+                let mask = document.getElementById('textMask');
+                if (!mask) {
+                    mask = document.createElement('div');
+                    mask.id = 'textMask';
+                    mask.style.cssText = 'position:fixed;top:0;left:0;width:300px;height:100px;background:transparent;z-index:999999;pointer-events:none;';
+                    if (document.body) {
+                        document.body.appendChild(mask);
+                    } else {
+                        document.documentElement.appendChild(mask);
+                    }
+                }
+            }
+            
+            // 立即执行
+            cleanText();
+            
+            // DOM加载后执行
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', cleanText);
+            } else {
+                cleanText();
+            }
+            
+            // 延迟执行
+            setTimeout(cleanText, 50);
+            setTimeout(cleanText, 200);
+        })();
+
         // 祝福语数组
         const blessings = [
             "愿你的每一天都充满阳光和笑容！",
@@ -320,10 +428,31 @@
             });
         });
 
-        // 绑定按钮点击事件
+        // 绑定按钮点击事件 - 使用多种方式确保能绑定成功
         function bindButtonEvent() {
             const confirmBtn = document.getElementById('confirmBtn');
-            if (confirmBtn) {
+            if (confirmBtn && !confirmBtn.dataset.bound) {
+                // 标记已绑定，避免重复绑定
+                confirmBtn.dataset.bound = 'true';
+                
+                // 方法1: 使用onclick属性（最兼容）
+                confirmBtn.onclick = function(e) {
+                    e = e || window.event;
+                    if (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                    try {
+                        startBlessing();
+                        return false;
+                    } catch (error) {
+                        console.error('启动祝福动画时出错:', error);
+                        alert('出现错误: ' + (error.message || error));
+                        return false;
+                    }
+                };
+                
+                // 方法2: 添加click事件监听器
                 confirmBtn.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
@@ -331,11 +460,25 @@
                         startBlessing();
                     } catch (error) {
                         console.error('启动祝福动画时出错:', error);
-                        alert('出现错误，请刷新页面重试');
+                        alert('出现错误: ' + (error.message || error));
+                    }
+                    return false;
+                });
+                
+                // 方法3: 添加mousedown事件作为备用
+                confirmBtn.addEventListener('mousedown', function(e) {
+                    e.preventDefault();
+                    try {
+                        startBlessing();
+                    } catch (error) {
+                        console.error('启动祝福动画时出错:', error);
                     }
                 });
-            } else {
-                console.error('找不到确认按钮元素');
+                
+                console.log('按钮事件绑定成功');
+            } else if (!confirmBtn) {
+                console.error('找不到确认按钮元素，尝试延迟绑定...');
+                setTimeout(bindButtonEvent, 500);
             }
         }
 
@@ -376,7 +519,7 @@
             });
 
             // 确保body的直接子元素都是有效的
-            Array.from(document.body   身体.childNodes).forEach(child => {
+            Array.from(document.body.childNodes).forEach(child => {
                 if (child.nodeType === Node.TEXT_NODE) {
                     const text = child.textContent.trim();
                     if (text && (text.includes('</') || text.match(/^[<>\/]+/))) {
@@ -391,8 +534,8 @@
         }
 
         // 页面加载完成后绑定按钮事件
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', function() {
+        if (document.readyState === 'loading') {如果（文档就绪状态等于“加载中”）{
+            document.addEventListener('DOMContentLoaded', function() {文档.addEventListener('DOMContentLoaded', function() {
                 bindButtonEvent();
                 cleanupPage();
             });
@@ -404,6 +547,18 @@
         
         // 延迟再次清理，确保所有内容都已加载
         setTimeout(cleanupPage, 100);
+        setTimeout(cleanupPage, 500);
+        setTimeout(cleanupPage, 1000);
+        
+        // 确保按钮事件被绑定
+        setTimeout(bindButtonEvent, 200);
+        setTimeout(bindButtonEvent, 500);
+        
+        // 页面完全加载后再次绑定
+        window.addEventListener('load', function() {
+            bindButtonEvent();
+            cleanupPage();
+        });
     </script>   > < /脚本
 </body>   身体< / >
 </html>
