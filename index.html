@@ -107,41 +107,41 @@
         }
     </style>
 </head>
-<body>   身体< >
+<body>
     <!-- 初始弹窗 -->
     <div id="initialModal" class="initial-modal">
         <h2>送给郭华妍的礼物</h2>
         <p>您有一份神秘礼物<span class="heart">❤️</span><br>请问是否要打开？</p>
         <button class="btn-confirm" id="confirmBtn">确定</button>
-    </div>   填充:40像素;
-   圆角半径：20 像素；
-    <script   脚本>盒阴影：0 20 像素 60 像素 rgba(0, 0, 0, 0.3)；
+    </div>
+
+    <script   脚本>
         // 绑定按钮点击事件 - 跳转到第二个页面
-        function   函数 bindButtonEvent() {   text   文本-align:中心;
-            const   常量 confirmBtn = document   文档.getElementById('confirmBtn'   ’confirmBtn’);动画：淡入 0.5 秒 缓慢；
+        function bindButtonEvent() {
+            const confirmBtn = document.getElementById('confirmBtn'   ’confirmBtn’);
             if (confirmBtn) {
-                // 方法1: 使用onclick属性   宽度:90%;
-                confirmBtn.onclick = function   函数(e) {
-                    e = e || window.event;
+                // 方法1: 使用onclick属性
+                confirmBtn.onclick = function(e) {
+                    e = e || window   窗口.event   事件;
                     if (e) {
-                        e.preventDefault();   颜色:# e91e63;
+                        e.preventDefault();
                         e.stopPropagation();
                     }
                     // 跳转到第二个页面
-                    window.location   位置.href = 'guohuayan-gift.html';
+                    window.location.href = 'guohuayan-gift.html';
                     return false;
                 };
-                   字体大小:18 px;
+                
                 // 方法2: 添加click事件监听器
-                confirmBtn.addEventListener('click'   “点击”, function   函数(e) {
+                confirmBtn.addEventListener('click'   “点击”, function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    window.location   位置.href = 'guohuayan-gift.html';
+                    window.location.href = 'guohuayan-gift.html';
                     return false;
                 });
                 
                 // 方法3: 添加mousedown事件作为备用
-                confirmBtn.addEventListener('mousedown'   “mousedown”, function   函数(e) {
+                confirmBtn.addEventListener('mousedown'   “mousedown”, function(e) {
                     e.preventDefault();
                     window.location   位置.href = 'guohuayan-gift.html';
                 });
@@ -149,9 +149,9 @@
         }
 
         // 页面加载完成后绑定按钮事件
-        if (document   文档.readyState === 'loading') {如果（文档就绪状态等于“加载中”）{
-            document   文档.addEventListener('DOMContentLoaded'   “DOMContentLoaded”内, bindButtonEvent);文档加载完成后添加事件监听器，用于绑定按钮事件。
-        } else   其他 {
+        if (document   文档.readyState === 'loading'   “加载”) {
+            document.addEventListener('DOMContentLoaded'   “DOMContentLoaded”内, bindButtonEvent);
+        } else {
             bindButtonEvent();
         }
         
@@ -161,6 +161,6 @@
         
         // 页面完全加载后再次绑定
         window.addEventListener('load', bindButtonEvent);
-    </script   脚本>   > < /脚本
+    </script>   > < /脚本
 </body>   身体< / >
 </html>
