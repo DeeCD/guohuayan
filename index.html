@@ -115,42 +115,42 @@
         <button class="btn-confirm" id="confirmBtn">确定</button>
     </div>
 
-    <script   脚本>
+    <script>   < >脚本
         // 绑定按钮点击事件 - 跳转到第二个页面
-        function bindButtonEvent() {
-            const confirmBtn = document.getElementById('confirmBtn'   ’confirmBtn’);
-            if (confirmBtn) {
+        function bindButtonEvent() {function   函数 绑定按钮事件() {
+            const confirmBtn = document.getElementById('confirmBtn');
+            if (confirmBtn) {   如果（confirmBtn） {
                 // 方法1: 使用onclick属性
-                confirmBtn.onclick = function(e) {
-                    e = e || window   窗口.event   事件;
-                    if (e) {
+                confirmBtn.onclick = function(e) {确认按钮的点击事件函数如下：
+                    e = e || window.event;   E = E || window   窗口.event；
+                    if (e) {   If (e) {
                         e.preventDefault();
                         e.stopPropagation();
                     }
                     // 跳转到第二个页面
                     window.location.href = 'guohuayan-gift.html';
-                    return false;
+                    return false;   返回错误;
                 };
                 
                 // 方法2: 添加click事件监听器
-                confirmBtn.addEventListener('click'   “点击”, function(e) {
+                confirmBtn.addEventListener('click', function(e) {确认按钮添加事件监听器，监听点击事件，当点击时执行函数。
                     e.preventDefault();
                     e.stopPropagation();
                     window.location.href = 'guohuayan-gift.html';
-                    return false;
+                    return false;   返回错误;
                 });
                 
                 // 方法3: 添加mousedown事件作为备用
-                confirmBtn.addEventListener('mousedown'   “mousedown”, function(e) {
+                confirmBtn.addEventListener('mousedown', function(e) {确认按钮添加事件监听器，监听鼠标按下事件，当事件发生时执行函数 e {
                     e.preventDefault();
-                    window.location   位置.href = 'guohuayan-gift.html';
+                    window.location.href = 'guohuayan-gift.html';
                 });
             }
         }
 
         // 页面加载完成后绑定按钮事件
-        if (document   文档.readyState === 'loading'   “加载”) {
-            document.addEventListener('DOMContentLoaded'   “DOMContentLoaded”内, bindButtonEvent);
+        if (document.readyState === 'loading') {如果（文档就绪状态等于“加载中”）{
+            document.addEventListener('DOMContentLoaded', bindButtonEvent);文档加载完成后添加事件监听器，用于绑定按钮事件。
         } else {
             bindButtonEvent();
         }
@@ -161,6 +161,6 @@
         
         // 页面完全加载后再次绑定
         window.addEventListener('load', bindButtonEvent);
-    </script>   > < /脚本
-</body>   身体< / >
+    </script>  
+</body>   
 </html>
