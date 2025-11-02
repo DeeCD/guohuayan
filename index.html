@@ -28,68 +28,6 @@
             position: relative;
         }
 
-        /* 隐藏任何意外显示的标签文本 */
-        body::before,
-        body::after {
-            display: none !important;
-            content: none !important;
-        }
-
-        /* 确保只有body内的内容可见 */
-        * {
-            text-rendering: optimizeLegibility;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        /* 隐藏任何在body外部的文本 */
-        html > :not(head):not(body) {
-            display: none !important;
-        }
-
-        /* 强制隐藏任何包含HTML标签的文本 */
-        html::before,
-        html::after,
-        body::before,
-        body::after {
-            display: none !important;
-            content: none !important;
-            visibility: hidden !important;
-        }
-
-        /* 隐藏所有直接文本节点 */
-        html > text,
-        body > text {
-            display: none !important;
-            visibility: hidden !important;
-        }
-
-        /* 绝对定位隐藏左上角的任何文本 */
-        html {
-            position: relative;
-        }
-        
-        html::before {
-            content: '' !important;
-            display: none !important;
-        }
-        
-        /* 强制隐藏页面左上角区域可能出现的文本 */
-        @supports (position: absolute) {
-            html::before {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 200px;
-                height: 50px;
-                background: transparent;
-                z-index: 999999;
-                pointer-events: none;
-                content: '';
-                display: block;
-            }
-        }
-
         /* 初始弹窗样式 */
         .initial-modal {
             position: fixed;
@@ -141,37 +79,6 @@
             transform: scale(0.98);
         }
 
-        /* 祝福语弹窗样式 */
-        .blessing-modal {
-            position: fixed;
-            background: #ffb6c1;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-            width: 280px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .blessing-modal.show {
-            opacity: 1;
-        }
-
-        .blessing-modal h3 {
-            color: #e91e63;
-            margin-bottom: 15px;
-            font-size: 20px;
-            text-align: center;
-        }
-
-        .blessing-modal p {
-            color: #8b008b;
-            font-size: 16px;
-            line-height: 1.6;
-            text-align: center;
-        }
-
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -200,365 +107,60 @@
         }
     </style>
 </head>
-<body>
+<body>   身体< >
     <!-- 初始弹窗 -->
     <div id="initialModal" class="initial-modal">
         <h2>送给郭华妍的礼物</h2>
         <p>您有一份神秘礼物<span class="heart">❤️</span><br>请问是否要打开？</p>
         <button class="btn-confirm" id="confirmBtn">确定</button>
-    </div>
-
-    <script>
-        // 立即隐藏任何可能显示的标签文本
-        (function() {
-            // 立即执行，不等待DOM加载
-            function cleanText() {
-                // 清理html根元素的文本节点
-                if (document.documentElement) {
-                    const htmlChildren = Array.from(document.documentElement.childNodes);
-                    htmlChildren.forEach(function(child) {
-                        if (child.nodeType === 3) { // TEXT_NODE
-                            const text = child.textContent;
-                            if (text && (text.trim().match(/^[<>\/]+/) || text.includes('</') || 
-                                text.includes('脚本') || text.includes('身体'))) {
-                                try {
-                                    document.documentElement.removeChild(child);
-                                } catch(e) {}
-                            }
-                        }
-                    });
-                }
-                
-                // 清理body直接子文本节点
-                if (document.body) {
-                    const bodyChildren = Array.from(document.body.childNodes);
-                    bodyChildren.forEach(function(child) {
-                        if (child.nodeType === 3) { // TEXT_NODE
-                            const text = child.textContent;
-                            if (text && (text.trim().match(/^[<>\/]+/) || text.includes('</') ||
-                                text.includes('脚本') || text.includes('身体'))) {
-                                try {
-                                    document.body.removeChild(child);
-                                } catch(e) {}
-                            }
-                        }
-                    });
-                }
-                
-                // 创建遮罩层隐藏左上角
-                let mask = document.getElementById('textMask');
-                if (!mask) {
-                    mask = document.createElement('div');
-                    mask.id = 'textMask';
-                    mask.style.cssText = 'position:fixed;top:0;left:0;width:300px;height:100px;background:transparent;z-index:999999;pointer-events:none;';
-                    if (document.body) {
-                        document.body.appendChild(mask);
-                    } else {
-                        document.documentElement.appendChild(mask);
-                    }
-                }
-            }
-            
-            // 立即执行
-            cleanText();
-            
-            // DOM加载后执行
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', cleanText);
-            } else {
-                cleanText();
-            }
-            
-            // 延迟执行
-            setTimeout(cleanText, 50);
-            setTimeout(cleanText, 200);
-        })();
-
-        // 祝福语数组
-        const blessings = [
-            "愿你的每一天都充满阳光和笑容！",
-            "愿幸福永远陪伴在你的身边！",
-            "愿所有的美好都如期而至！",
-            "愿你的梦想都能实现！",
-            "愿你永远年轻漂亮，青春永驻！",
-            "愿你健康快乐，平安喜乐！",
-            "愿你工作顺利，前程似锦！",
-            "愿你被温柔以待，被世界深深爱着！",
-            "愿你拥有一颗纯净的心，感受生活的美好！",
-            "愿你的人生如诗如画，充满精彩！",
-            "愿你的未来充满无限可能！",
-            "愿你每天都有好心情，开心快乐！",
-            "愿你身边永远有爱你的人！",
-            "愿你的每一个愿望都能成真！",
-            "愿你永远保持那份纯真和美好！",
-            "愿你的生活充满惊喜和感动！",
-            "愿你的笑容如花般绽放！",
-            "愿你拥有美好的爱情和友情！",
-            "愿你的每一天都是新的开始！",
-            "愿你成为最美好的自己！",
-            "愿你的人生路上永远有阳光！",
-            "愿你拥有无尽的快乐和幸福！",
-            "愿你的心中永远有温暖和希望！",
-            "愿你永远保持那份独特的魅力！",
-            "愿你的未来比现在更加精彩！",
-            "愿你拥有最美好的回忆！",
-            "愿你的生活充满爱与温暖！",
-            "愿你永远相信美好的事情即将发生！",
-            "愿你的每一天都值得珍惜！",
-            "愿你拥有世界上最美好的祝福！",
-            "愿你每一天都充满希望和力量！",
-            "愿你的笑容感染身边的每一个人！",
-            "愿你的心灵永远纯净如初！",
-            "愿你的生活充满诗意和远方！",
-            "愿你勇敢追逐心中的梦想！",
-            "愿你的每一天都比昨天更美好！",
-            "愿你拥有真挚的友谊和温暖的陪伴！",
-            "愿你的眼中永远有星辰大海！",
-            "愿你成为自己想要成为的那个人！",
-            "愿你的脚步坚定，未来可期！",
-            "愿你的人生充满色彩和活力！",
-            "愿你的每一天都值得被记录！",
-            "愿你的心中永远有爱和善良！",
-            "愿你的未来充满惊喜和奇迹！"
-        ];
-
-        // 爱心轨迹参数方程
-        function getHeartPosition(t, index, total) {
-            // 爱心参数方程
-            const scale = 25; // 缩放因子（进一步减小爱心尺寸）
-            const centerX = window.innerWidth / 2;
-            const centerY = window.innerHeight / 2;
-            
-            // 使用参数方程生成爱心形状
-            const x = scale * 16 * Math.pow(Math.sin(t), 3);
-            const y = -scale * (13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
-            
-            return {
-                x: centerX + x,
-                y: centerY + y
-            };
-        }
-
-        let modalIndex = 0;
-
-        function startBlessing() {
-            // 隐藏初始弹窗
-            const initialModal = document.getElementById('initialModal');
-            initialModal.style.opacity = '0';
-            initialModal.style.transition = 'opacity 0.5s';
-            
-            setTimeout(() => {
-                initialModal.style.display = 'none';
-            }, 500);
-
-            // 创建祝福语弹窗（扩展到60个）
-            const extendedBlessings = [];
-            // 复制祝福语数组以扩展到60个
-            while (extendedBlessings.length < 60) {
-                extendedBlessings.push(...blessings);
-            }
-            // 只取前60个
-            extendedBlessings.splice(60);
-            const totalModals = extendedBlessings.length;
-            const duration = 7000; // 每个弹窗运动时间（毫秒）- 减慢速度
-            const staggerDelay = 1000; // 每个弹窗延迟时间（间隔1秒）
-
-            extendedBlessings.forEach((blessing, index) => {
-                setTimeout(() => {
-                    createBlessingModal(blessing, index, totalModals, duration);
-                }, index * staggerDelay);
-            });
-        }
-
-        function createBlessingModal(blessing, index, total, duration) {
-            // 创建弹窗元素
-            const modal = document.createElement('div');
-            modal.className = 'blessing-modal';
-            modal.innerHTML = `
-                <h3>❤️ 提示</h3>
-                <p>${blessing}</p>
-            `;
-            document.body.appendChild(modal);
-
-            // 初始位置（从屏幕正中央开始）
-            const centerX = window.innerWidth / 2;
-            const centerY = window.innerHeight / 2;
-            modal.style.left = centerX + 'px';
-            modal.style.top = centerY + 'px';
-            modal.style.transform = 'translate(-50%, -50%) scale(0)';
-
-            // 显示弹窗
-            setTimeout(() => {
-                modal.classList.add('show');
-            }, 50);
-
-            // 计算目标位置（爱心轨迹上的点）
-            const t = (index / total) * 2 * Math.PI;
-            const targetPos = getHeartPosition(t, index, total);
-
-            // 动画到目标位置
-            setTimeout(() => {
-                modal.style.transition = `all ${duration}ms cubic-bezier(0.4, 0, 0.2, 1)`;
-                modal.style.left = targetPos.x + 'px';
-                modal.style.top = targetPos.y + 'px';
-                modal.style.transform = 'translate(-50%, -50%) scale(1)';
-            }, 100);
-
-            // 添加鼠标悬停效果
-            modal.addEventListener('mouseenter', () => {
-                modal.style.transform = 'translate(-50%, -50%) scale(1.1)';
-                modal.style.zIndex = '2000';
-            });
-
-            modal.addEventListener('mouseleave', () => {
-                modal.style.transform = 'translate(-50%, -50%) scale(1)';
-                modal.style.zIndex = '1000';
-            });
-        }
-
-        // 窗口大小改变时重新计算位置
-        window.addEventListener('resize', () => {
-            const modals = document.querySelectorAll('.blessing-modal');
-            modals.forEach((modal, index) => {
-                const total = modals.length;
-                const t = (index / total) * 2 * Math.PI;
-                const targetPos = getHeartPosition(t, index, total);
-                modal.style.left = targetPos.x + 'px';
-                modal.style.top = targetPos.y + 'px';
-            });
-        });
-
-        // 绑定按钮点击事件 - 使用多种方式确保能绑定成功
-        function bindButtonEvent() {
-            const confirmBtn = document.getElementById('confirmBtn');
-            if (confirmBtn && !confirmBtn.dataset.bound) {
-                // 标记已绑定，避免重复绑定
-                confirmBtn.dataset.bound = 'true';
-                
-                // 方法1: 使用onclick属性（最兼容）
-                confirmBtn.onclick = function(e) {
+    </div>   填充:40像素;
+   圆角半径：20 像素；
+    <script   脚本>盒阴影：0 20 像素 60 像素 rgba(0, 0, 0, 0.3)；
+        // 绑定按钮点击事件 - 跳转到第二个页面
+        function   函数 bindButtonEvent() {   text   文本-align:中心;
+            const   常量 confirmBtn = document   文档.getElementById('confirmBtn'   ’confirmBtn’);动画：淡入 0.5 秒 缓慢；
+            if (confirmBtn) {
+                // 方法1: 使用onclick属性   宽度:90%;
+                confirmBtn.onclick = function   函数(e) {
                     e = e || window.event;
                     if (e) {
-                        e.preventDefault();
+                        e.preventDefault();   颜色:# e91e63;
                         e.stopPropagation();
                     }
-                    try {
-                        startBlessing();
-                        return false;
-                    } catch (error) {
-                        console.error('启动祝福动画时出错:', error);
-                        alert('出现错误: ' + (error.message || error));
-                        return false;
-                    }
+                    // 跳转到第二个页面
+                    window.location   位置.href = 'guohuayan-gift.html';
+                    return false;
                 };
-                
+                   字体大小:18 px;
                 // 方法2: 添加click事件监听器
-                confirmBtn.addEventListener('click', function(e) {
+                confirmBtn.addEventListener('click'   “点击”, function   函数(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    try {
-                        startBlessing();
-                    } catch (error) {
-                        console.error('启动祝福动画时出错:', error);
-                        alert('出现错误: ' + (error.message || error));
-                    }
+                    window.location   位置.href = 'guohuayan-gift.html';
                     return false;
                 });
                 
                 // 方法3: 添加mousedown事件作为备用
-                confirmBtn.addEventListener('mousedown', function(e) {
+                confirmBtn.addEventListener('mousedown'   “mousedown”, function   函数(e) {
                     e.preventDefault();
-                    try {
-                        startBlessing();
-                    } catch (error) {
-                        console.error('启动祝福动画时出错:', error);
-                    }
+                    window.location   位置.href = 'guohuayan-gift.html';
                 });
-                
-                console.log('按钮事件绑定成功');
-            } else if (!confirmBtn) {
-                console.error('找不到确认按钮元素，尝试延迟绑定...');
-                setTimeout(bindButtonEvent, 500);
             }
-        }
-
-        // 清理页面中可能意外显示的标签文本
-        function cleanupPage() {
-            // 遍历所有文本节点，移除包含HTML标签的文本
-            const walker = document.createTreeWalker(
-                document.body,
-                NodeFilter.SHOW_TEXT,
-                null,
-                false
-            );
-            
-            let node;
-            const nodesToRemove = [];
-            while (node = walker.nextNode()) {
-                const text = node.textContent;
-                // 如果文本节点包含类似HTML标签的内容，可能是误显示的
-                const scriptEndTag = '<' + '/' + 'script>';
-                const bodyEndTag = '<' + '/' + 'body>';
-                if (text && (text.includes(scriptEndTag) || text.includes(bodyEndTag) || 
-                    text.includes('</脚本') || text.includes('</身体') ||
-                    text.trim().match(/^[<>\/]/))) {
-                    // 只移除明显的HTML标签文本，保留正常的文本内容
-                    const tagPattern = /^[<>\/]+[\s\S]*[<>\/]+$/;
-                    if (text.trim().match(tagPattern)) {
-                        nodesToRemove.push(node);
-                    }
-                }
-            }
-            
-            nodesToRemove.forEach(n => {
-                try {
-                    n.parentNode && n.parentNode.removeChild(n);
-                } catch (e) {
-                    console.warn('清理文本节点时出错:', e);
-                }
-            });
-
-            // 确保body的直接子元素都是有效的
-            Array.from(document.body.childNodes).forEach(child => {
-                if (child.nodeType === Node.TEXT_NODE) {
-                    const text = child.textContent.trim();
-                    if (text && (text.includes('</') || text.match(/^[<>\/]+/))) {
-                        try {
-                            document.body.removeChild(child);
-                        } catch (e) {
-                            // 忽略错误
-                        }
-                    }
-                }
-            });
         }
 
         // 页面加载完成后绑定按钮事件
-        if (document.readyState === 'loading') {如果（文档就绪状态等于“加载中”）{
-            document.addEventListener('DOMContentLoaded', function() {文档.addEventListener('DOMContentLoaded', function() {
-                bindButtonEvent();
-                cleanupPage();
-            });
-        } else {
-            // DOM已经加载完成，立即绑定
+        if (document   文档.readyState === 'loading') {如果（文档就绪状态等于“加载中”）{
+            document   文档.addEventListener('DOMContentLoaded'   “DOMContentLoaded”内, bindButtonEvent);文档加载完成后添加事件监听器，用于绑定按钮事件。
+        } else   其他 {
             bindButtonEvent();
-            cleanupPage();
         }
         
-        // 延迟再次清理，确保所有内容都已加载
-        setTimeout(cleanupPage, 100);
-        setTimeout(cleanupPage, 500);
-        setTimeout(cleanupPage, 1000);
-        
-        // 确保按钮事件被绑定
-        setTimeout(bindButtonEvent, 200);
+        // 延迟绑定，确保按钮能被找到
+        setTimeout(bindButtonEvent, 100);
         setTimeout(bindButtonEvent, 500);
         
         // 页面完全加载后再次绑定
-        window.addEventListener('load', function() {
-            bindButtonEvent();
-            cleanupPage();
-        });
-    </script>   > < /脚本
+        window.addEventListener('load', bindButtonEvent);
+    </script   脚本>   > < /脚本
 </body>   身体< / >
 </html>
