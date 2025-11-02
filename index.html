@@ -52,31 +52,42 @@
         }
 
         .initial-modal p {
-            color: #333;
-            font-size: 18px;
+            color: #333;   颜色:# 333;
+            font-size: 18px;   字体大小:18 px;
             margin-bottom: 30px;
-            line-height: 1.6;
+            line-height: 1.6;   行高:1.6;
         }
 
-        .btn-confirm {
-            background: linear-gradient(135deg, #ff6b9d 0%, #e91e63 100%);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 18px;
+        .btn-confirm {   ．btn-confirm——   .btn-confirm…   btn-confirm ...
+            display: inline-block;   显示：内联块；
+            background: linear-gradient(135deg, #ff6b9d 0%, #e91e63 100%);背景：线性渐变（135 度，#ff6b9d 0%，#e91e63 100%）；
+            color: white;   颜色:白色;
+            text-decoration: none;
+            border: none;   边界:没有;
+            padding: 15px 40px;   Padding   填充: 15px 40px；   px;
+            font-size: 18px;   字体大小:18 px;
             border-radius: 30px;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 5px 15px rgba(233, 30, 99, 0.4);
+            cursor: pointer;   光标:指针;
+            transition: all 0.3s;   过渡：均为0.3s；   年代;
+            box-shadow: 0 5px 15px rgba(233, 30, 99, 0.4);盒阴影：0 5 像素 15 像素 rgba(233, 30, 99, 0.4)；
         }
 
-        .btn-confirm:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 20px rgba(233, 30, 99, 0.6);
+        .btn-confirm:hover {   ．btn-confirm   .btn-confirm:{徘徊
+            transform: scale(1.05);   变换：缩放（1.05）；
+            box-shadow: 0 8px 20px rgba(233, 30, 99, 0.6);盒阴影：0 8 像素 20 像素 颜色值（233, 30, 99）透明度 0.6；
+            color: white;   颜色:白色;
+            text-decoration: none;
         }
 
         .btn-confirm:active {
             transform: scale(0.98);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .btn-confirm:visited {
+            color: white;
+            text-decoration: none;
         }
 
         @keyframes fadeIn {
@@ -86,7 +97,7 @@
             }
             to {
                 opacity: 1;
-                transform: translate(-50%, -50%) scale(1);
+                transform   变换: translate   翻译(-50%, -50%) scale(1);
             }
         }
 
@@ -94,7 +105,7 @@
             font-size: 24px;
             color: #e91e63;
             display: inline-block;
-            animation: heartbeat 1.5s ease-in-out infinite;
+            animation: heartbeat 1.5s   年代 ease-in-out infinite   无限;
         }
 
         @keyframes heartbeat {
@@ -102,107 +113,20 @@
                 transform: scale(1);
             }
             50% {
-                transform: scale(1.2);
+                transform: scale(1.2);   变换：缩放（1.2）；
             }
         }
-    </style>
-</head>
-<body>
+    </style>   
+</head>  
+<body>  
     <!-- 初始弹窗 -->
     <div id="initialModal" class="initial-modal">
         <h2>送给郭华妍的礼物</h2>
-        <p>您有一份神秘礼物<span class="heart">❤️</span><br>请问是否要打开？</p>
-        <button class="btn-confirm" id="confirmBtn" onclick="goToGift(); return false;">确定</button>
-        <a href="./guohuayan-gift.html" id="confirmLink" style="display:none;">确定</a>
+        <p>您有一份神秘礼物<span class="heart">❤️</span><br>请问是否要打开？</p>You have a mysterious gift. ❤️
+Would you like to open it? 
+
+        <a href="guohuayan-gift.html" class="btn-confirm">确定</a>
     </div>
 
-    <script>
-        // 跳转到祝福页面 - 使用多种路径方式确保兼容
-        function goToGift() {
-            console.log('goToGift函数被调用');
-            
-            // 优先使用链接点击（最可靠，兼容性最好）
-            const link = document.getElementById('confirmLink');
-            if (link) {
-                console.log('使用链接跳转');
-                try {
-                    link.click();
-                } catch(e) {
-                    console.warn('链接点击失败，尝试其他方式:', e);
-                    // 备用方式：直接设置location
-                    try {
-                        window.location.href = './guohuayan-gift.html';
-                    } catch(e2) {
-                        window.location.href = 'guohuayan-gift.html';
-                    }
-                }
-                return false;
-            }
-            
-            // 备用方式：直接跳转
-            try {
-                // 尝试相对路径
-                window.location.href = './guohuayan-gift.html';
-            } catch(e) {
-                try {
-                    // 尝试简单相对路径
-                    window.location.href = 'guohuayan-gift.html';
-                } catch(e2) {
-                    // 尝试绝对路径
-                    const currentPath = window.location.pathname;
-                    const basePath = currentPath.substring(0, currentPath.lastIndexOf('/')) || '';
-                    window.location.href = basePath + '/guohuayan-gift.html';
-                }
-            }
-            return false;
-        }
-        
-        // 确保函数在全局作用域可用
-        window.goToGift = goToGift;
-
-        // 绑定按钮点击事件 - 使用多种方式确保能工作
-        function bindButtonEvent() {
-            const confirmBtn = document   文档.getElementById('confirmBtn'   ’confirmBtn’);
-            if (confirmBtn) {
-                // 确保onclick存在
-                if (!confirmBtn.onclick) {
-                    confirmBtn.onclick = goToGift;
-                }
-                
-                // 添加事件监听器作为备用
-                confirmBtn.addEventListener('click'   “点击”, function(e) {
-                    e.preventDefault();
-                    goToGift();
-                    return false;
-                }, true);
-                
-                // 添加mousedown事件作为备用
-                confirmBtn.addEventListener('mousedown'   “mousedown”, function(e) {
-                    goToGift();
-                }, true);
-                
-                console.log('按钮事件已绑定');
-            } else {
-                console.error   错误('找不到按钮元素');
-            }
-        }
-
-        // 立即执行
-        bindButtonEvent();
-
-        // 页面加载完成后绑定按钮事件
-        if (document.readyState === 'loading') {如果（文档就绪状态等于“加载中”）{
-            document.addEventListener('DOMContentLoaded', bindButtonEvent);文档加载完成后添加事件监听器，用于绑定按钮事件。
-        } else {
-            bindButtonEvent();
-        }
-        
-        // 延迟绑定，确保按钮能被找到
-        setTimeout(bindButtonEvent, 100);
-        setTimeout(bindButtonEvent, 500);
-        
-        // 页面完全加载后再次绑定
-        window.addEventListener('load', bindButtonEvent);
-    </script>  
 </body>   
-</html>
+</html   超文本标记语言   超文本标记语言>
