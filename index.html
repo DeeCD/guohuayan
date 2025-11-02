@@ -11,12 +11,40 @@
             box-sizing: border-box;
         }
 
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
         body {
             font-family: 'Microsoft YaHei', Arial, sans-serif;
             background: url('1.png') no-repeat center center fixed;
             background-size: cover;
             min-height: 100vh;
             overflow: hidden;
+            position: relative;
+        }
+
+        /* 隐藏任何意外显示的标签文本 */
+        body::before,
+        body::after {
+            display: none !important;
+            content: none !important;
+        }
+
+        /* 确保只有body内的内容可见 */
+        * {
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* 隐藏任何在body外部的文本 */
+        html > :not(head):not(body) {
+            display: none !important;
         }
 
         /* 初始弹窗样式 */
@@ -274,7 +302,7 @@
                 modal.style.zIndex = '2000';
             });
 
-            modal.addEventListener('mouseleave'   “mouseleave”, () => {
+            modal.addEventListener('mouseleave', () => {
                 modal.style.transform = 'translate(-50%, -50%) scale(1)';
                 modal.style.zIndex = '1000';
             });
@@ -283,12 +311,12 @@
         // 窗口大小改变时重新计算位置
         window.addEventListener('resize', () => {
             const modals = document.querySelectorAll('.blessing-modal');
-            modals.forEach((modal   模态, index) => {
+            modals.forEach((modal, index) => {
                 const total = modals.length;
                 const t = (index / total) * 2 * Math.PI;
                 const targetPos = getHeartPosition(t, index, total);
                 modal.style.left = targetPos.x + 'px';
-                modal.style.top = targetPos.y + 'px'   “像素”;
+                modal.style.top = targetPos.y + 'px';
             });
         });
 
@@ -311,13 +339,71 @@
             }
         }
 
+        // 清理页面中可能意外显示的标签文本
+        function cleanupPage() {
+            // 遍历所有文本节点，移除包含HTML标签的文本
+            const walker = document.createTreeWalker(
+                document.body,
+                NodeFilter.SHOW_TEXT,
+                null,
+                false
+            );
+            
+            let node;
+            const nodesToRemove = [];
+            while (node = walker.nextNode()) {
+                const text = node.textContent;
+                // 如果文本节点包含类似HTML标签的内容，可能是误显示的
+                const scriptEndTag = '<' + '/' + 'script>';
+                const bodyEndTag = '<' + '/' + 'body>';
+                if (text && (text.includes(scriptEndTag) || text.includes(bodyEndTag) || 
+                    text.includes('</脚本') || text.includes('</身体') ||
+                    text.trim().match(/^[<>\/]/))) {
+                    // 只移除明显的HTML标签文本，保留正常的文本内容
+                    const tagPattern = /^[<>\/]+[\s\S]*[<>\/]+$/;
+                    if (text.trim().match(tagPattern)) {
+                        nodesToRemove.push(node);
+                    }
+                }
+            }
+            
+            nodesToRemove.forEach(n => {
+                try {
+                    n.parentNode && n.parentNode.removeChild(n);
+                } catch (e) {
+                    console.warn('清理文本节点时出错:', e);
+                }
+            });
+
+            // 确保body的直接子元素都是有效的
+            Array.from(document.body   身体.childNodes).forEach(child => {
+                if (child.nodeType === Node.TEXT_NODE) {
+                    const text = child.textContent.trim();
+                    if (text && (text.includes('</') || text.match(/^[<>\/]+/))) {
+                        try {
+                            document.body.removeChild(child);
+                        } catch (e) {
+                            // 忽略错误
+                        }
+                    }
+                }
+            });
+        }
+
         // 页面加载完成后绑定按钮事件
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', bindButtonEvent);
+            document.addEventListener('DOMContentLoaded', function() {
+                bindButtonEvent();
+                cleanupPage();
+            });
         } else {
             // DOM已经加载完成，立即绑定
             bindButtonEvent();
+            cleanupPage();
         }
+        
+        // 延迟再次清理，确保所有内容都已加载
+        setTimeout(cleanupPage, 100);
     </script>   > < /脚本
 </body>   身体< / >
 </html>
